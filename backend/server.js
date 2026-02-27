@@ -30,6 +30,32 @@ app.get("/", async (req, res) => {
   }
 });
 
+// Vulnerable Login
+app.post("/login", async (req, res) => {
+  const { username, password } = req.body;
+
+  const query = `
+    SELECT * FROM users
+    WHERE username = '${username}'
+    AND password = '${password}'
+  `;
+
+  console.log("Executing query:", query);
+
+  try {
+    const result = await pool.query(query);
+
+    if (result.rows.length > 0) {
+      res.json({ message: "Login successful", data: result.rows });
+    } else {
+      res.json({ message: "Invalid credentials" });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
