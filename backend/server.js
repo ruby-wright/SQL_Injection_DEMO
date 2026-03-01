@@ -56,6 +56,30 @@ app.post("/login", async (req, res) => {
   }
 });
 
+// Boolean-based blind SQL Injection 
+app.get("/blind-user-exists", async (req, res) => {
+  const { username } = req.query;
+  
+  const query = `
+    SELECT 1
+    FROM users
+    WHERE username = $1
+    LIMIT 1
+  `;
+
+  try {
+      const result = await pool.query(query, [username]);
+
+      // Only reveal TRUE/FALSE, not actual user data
+      const exists = result.rows.length > 0;
+      res.json({ userExists: exists });
+
+  } catch (err) {
+      console.error("Blind SQL error:", err.message);
+      res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
