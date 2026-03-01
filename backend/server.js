@@ -63,12 +63,12 @@ app.get("/blind-user-exists", async (req, res) => {
   const query = `
     SELECT 1
     FROM users
-    WHERE username = $1
+    WHERE username = $'${username}'
     LIMIT 1
   `;
 
   try {
-      const result = await pool.query(query, [username]);
+      const result = await pool.query(query);
 
       // Only reveal TRUE/FALSE, not actual user data
       const exists = result.rows.length > 0;
