@@ -63,7 +63,7 @@ app.get("/blind-user-exists", async (req, res) => {
   const query = `
     SELECT 1
     FROM users
-    WHERE username = $'${username}'
+    WHERE username = '${username}'
     LIMIT 1
   `;
 
