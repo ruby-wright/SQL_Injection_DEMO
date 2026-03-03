@@ -65,10 +65,10 @@ app.get("/blind-user-exists", async (req, res) => {
     FROM users
     WHERE username = '${username}'
     LIMIT 1
-  `;
+  `; // change to <username = $1> without '' to secure login
 
   try {
-      const result = await pool.query(query);
+      const result = await pool.query(query); // add <,[username]> after query to secure login
 
       // Only reveal TRUE/FALSE, not actual user data
       const exists = result.rows.length > 0;
